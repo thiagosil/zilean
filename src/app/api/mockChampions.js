@@ -1,4 +1,4 @@
-export let CHAMPIONS = [
+const champions = [
   {
     "_id": "577e9d08bd0259e02fc29dd4",
     "name": "Aatrox",
@@ -917,3 +917,15 @@ export let CHAMPIONS = [
     "__v": 0
   }
 ];
+
+class ChampionApi {
+  static getAllChampions() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(Object.assign([], champions));
+      }, 0);
+    });
+  }
+}
+
+export default ChampionApi;

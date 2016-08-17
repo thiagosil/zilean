@@ -1,7 +1,8 @@
 import React from 'react';
 import ChampionSearchBar from './ChampionSearchBar';
 import ChampionList from './ChampionList';
-import { CHAMPIONS } from '../../api/mockChampions';
+import { loadChampions } from '../../actions/championActions';
+import { call, put } from 'redux-saga/effects';
 
 class FilterableChampionsTable extends React.Component {
   constructor(props, context) {
@@ -30,15 +31,11 @@ class FilterableChampionsTable extends React.Component {
         <hr/>
 
         <ChampionList
-          champions={CHAMPIONS}
           championName={this.state.championName}/>
       </div>
     );
   }
 
 }
-
-FilterableChampionsTable.propTypes = {
-};
 
 export default FilterableChampionsTable;

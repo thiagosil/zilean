@@ -1,9 +1,13 @@
 import React from 'react';
 import ChampionRow from './ChampionRow';
+import { connect } from 'react-redux';
+import { getVisibleChampions } from '../../reducers/championReducer';
 
 class ChampionList extends React.Component {
   constructor(props, context) {
     super(props, context);
+
+    const champions  = this.props;
 
     this.filterChampions = this.filterChampions.bind(this);
   }
@@ -28,11 +32,9 @@ class ChampionList extends React.Component {
       <div className="container">
         <h2>Champions</h2>
 
-        <div className="row">
-          <ul className="heroes">
-            {rows}
-          </ul>
-        </div>
+        <ul className="heroes">
+          {rows}
+        </ul>
 
       </div>
     </section>
@@ -45,4 +47,7 @@ ChampionList.propTypes = {
   championName: React.PropTypes.string.isRequired
 };
 
-export default ChampionList;
+export default connect(
+  state => ({ champions: getVisibleChampions(state.champions) }),
+  {}
+)(ChampionList);
