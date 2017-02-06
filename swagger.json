@@ -1,0 +1,4482 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "O serviÃ§o `WSDenatran` estÃ¡ exposto atravÃ©s de `HTTP REST` oferecendo operaÃ§Ãµes que permitem as aplicaÃ§Ãµes realizarem buscas na base do [Denatran](http://denatran.gov.br).\nPara usar o serviÃ§o Ã© necessÃ¡rio o cadastro do certificado.\n\n## Endpoints\n\n- Desenvolvimento - https://wsdenatrandes-des07116.apps.dev.serpro/\n\n- HomologaÃ§Ã£o - https://wsrenavam.hom.denatran.serpro.gov.br/\n\n- ProduÃ§Ã£o - https://renavam.denatran.serpro.gov.br/\n\n## CÃ³digos de Retorno\n\n| CÃ³digo de retorno | Resumido | ExplicaÃ§Ã£o |\n| ------------- |:--------------------|:-----------------------------------------------------------------------------|\n| 200           | OK                  | Tudo funcionou como esperado.                                                |\n| 400           | RequisiÃ§Ã£o invÃ¡lida | A requisiÃ§Ã£o nÃ£o foi aceita. Geralmente por falta de um parÃ¢metro requerido. |\n| 401           | NÃ£o autorizado      | Problemas durante a autenticaÃ§Ã£o do Certificado ou do CPF do usuÃ¡rio.        |\n| 402           | RequisiÃ§Ã£o falhou   | Os parÃ¢metros foram validados, mas houve algum erro de negÃ³cio.              |\n| 404           | NÃ£o encontrado      | O recurso solicitado nÃ£o existe.                                             |\n| 500           | Erro no servidor    | Ocorreu algum erro interno.                                                  |\n\n\n\n## Tipos de Campos Retornados\n\n| Tipos de campos | Valor de retorno |\n| ---------------------- | :------------------------------------------------------------- |\n| campo de cÃ³digo        | nÃºmero do cÃ³digo ou zerado, se nÃ£o existir                     |\n| campo de descriÃ§Ã£o     | descriÃ§Ã£o do cÃ³digo retornado ou  INDISPONÃVEL, se nÃ£o existir |\n| campo boleano          | false (indicador negativo) ou true (indicador positivo)        |\n| campo de data          | data no formato aaaa-mm-dd, retornada apenas se existir        |\n| campo de texto         | texto ou vazio, se nÃ£o existir                                 |\n| campo numÃ©rico         | nÃºmero                                                         |\n\n--------------------------\n\n# Exemplo de implementaÃ§Ã£o\n\nPara exemplo de implementaÃ§Ã£o utilizando Java + Rest, [acesse este link](../api-example).\n\n--------------------------\n\n# Tabela com cÃ³digos de retorno\n\nQuando Ã© retornado um status code diferente de 200, a entidade retornada contÃ©m:\n\n```\n{\n  returnCode: int,\n  message: string\n}\n```\n\nPara visualizar os possÃ­veis cÃ³digos de retorno, [acesse este link](../api/returnCodes).\n\n\n--------------------------",
+    "version" : "1.0.0",
+    "title" : "WSDenatran",
+    "license" : {
+      "name" : "Contrato do ServiÃ§o",
+      "url" : "#"
+    }
+  },
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "Consulta AutorizaÃ§Ã£o de AlteraÃ§Ã£o de VeÃ­culo"
+  }, {
+    "name" : "Consulta de Condutores"
+  }, {
+    "name" : "Consulta de Indicadores"
+  }, {
+    "name" : "Consulta de InfraÃ§Ãµes"
+  }, {
+    "name" : "Consulta de RestriÃ§Ãµes Judiciais"
+  }, {
+    "name" : "Consulta de Roubo e Furto"
+  }, {
+    "name" : "Consulta de VeÃ­culos"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/v1/autorizacoesAlteracaoVeiculo/alteracoesPermitidas" : {
+      "get" : {
+        "tags" : [ "Consulta AutorizaÃ§Ã£o de AlteraÃ§Ã£o de VeÃ­culo" ],
+        "summary" : "Consulta alteraÃ§Ãµes permitidas",
+        "description" : "Consulta os tipos de alteraÃ§Ãµes que sÃ£o permitidas nos veÃ­culos",
+        "operationId" : "consultarAlteracoesPermitidas",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/AlteracaoPermitidaResumida"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/condutores/cpf/{cpf}" : {
+      "get" : {
+        "tags" : [ "Consulta de Condutores" ],
+        "summary" : "Consulta condutores por CPF",
+        "description" : "Consulta de condutores por CPF",
+        "operationId" : "consultarCondutoresPorCPF",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cpf",
+          "in" : "path",
+          "description" : "Consulta condutores por CPF",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Condutores"
+            }
+          }
+        }
+      }
+    },
+    "/v1/condutores/formularioRenach/{formularioRenach}" : {
+      "get" : {
+        "tags" : [ "Consulta de Condutores" ],
+        "summary" : "Consulta condutores por formulario RENACH",
+        "description" : "Consulta de condutores por nÃºmero do formulÃ¡rio RENACH",
+        "operationId" : "consultarCondutoresPorFormularioRenach",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "formularioRenach",
+          "in" : "path",
+          "description" : "NÃºmero do formulÃ¡rio RENACH do candidato/condutor gerado pelos DETRANs a cada novo processo solicitado pelo mesmo.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Condutores"
+            }
+          }
+        }
+      }
+    },
+    "/v1/condutores/impedimento/{impedimento}" : {
+      "get" : {
+        "tags" : [ "Consulta de Condutores" ],
+        "summary" : "Consulta condutores por impedimento",
+        "description" : "Consulta de condutores por nÃºmero do documento gerador do impedimento",
+        "operationId" : "consultarCondutoresPorImpedimento",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "impedimento",
+          "in" : "path",
+          "description" : "NÃºmero do documento gerador do impedimento Ã  conduÃ§Ã£o de veÃ­culos automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Condutores"
+            }
+          }
+        }
+      }
+    },
+    "/v1/condutores/infracoes/registroCnh/{numeroRegistroCnh}" : {
+      "get" : {
+        "tags" : [ "Consulta de Condutores" ],
+        "summary" : "Consulta extrato de infraÃ§Ãµes pela CNH do condutor",
+        "description" : "Consulta extrato de infraÃ§Ãµes pelo registro da Carteira Nacional de habilitaÃ§Ã£o do condutor",
+        "operationId" : "consultarExtratoInfracoesCondutor",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "numeroRegistroCnh",
+          "in" : "path",
+          "description" : "NÃºmero gerado pela BINCO para identificar o condutor",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ExtratoInfracoes"
+            }
+          }
+        }
+      }
+    },
+    "/v1/condutores/pgu/{pgu}" : {
+      "get" : {
+        "tags" : [ "Consulta de Condutores" ],
+        "summary" : "Consulta condutores por PGU",
+        "description" : "Consulta de condutores por ProntuÃ¡rio Geral Unificado (PGU)",
+        "operationId" : "consultarCondutoresPorPGU",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "pgu",
+          "in" : "path",
+          "description" : "NÃºmero do ProntuÃ¡rio Geral Unificado",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Condutores"
+            }
+          }
+        }
+      }
+    },
+    "/v1/condutores/pid/{pid}" : {
+      "get" : {
+        "tags" : [ "Consulta de Condutores" ],
+        "summary" : "Consulta condutores por PID",
+        "description" : "Consulta de condutores por nÃºmero do formulÃ¡rio de PermissÃ£o Internacional para Dirigir(PID)",
+        "operationId" : "consultarCondutoresPorPID",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "pid",
+          "in" : "path",
+          "description" : "NÃºmero que identifica o espelho do formulÃ¡rio usado pela GrÃ¡fica para emitir uma nova PID(PermissÃ£o Internacional para Dirigir)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Condutores"
+            }
+          }
+        }
+      }
+    },
+    "/v1/condutores/registroCnh/{numeroRegistroCnh}" : {
+      "get" : {
+        "tags" : [ "Consulta de Condutores" ],
+        "summary" : "Consulta condutores por registro",
+        "description" : "Consulta de condutores por nÃºmero de registro da CNH",
+        "operationId" : "consultarCondutoresPorRegistro",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "numeroRegistroCnh",
+          "in" : "path",
+          "description" : "NÃºmero gerado pela BINCO para identificar o condutor",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Condutores"
+            }
+          }
+        }
+      }
+    },
+    "/v1/condutores/validacao/cpf/{cpf}/registroCnh/{numeroRegistro}/segurancaCnh/{numeroSeguranca}" : {
+      "get" : {
+        "tags" : [ "Consulta de Condutores" ],
+        "summary" : "Consulta validade do nÃºmero de seguranÃ§a da CNH",
+        "description" : "Consulta validade do nÃºmero de seguranÃ§a da CNH",
+        "operationId" : "consultarNumeroSegurancaCnh",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cpf",
+          "in" : "path",
+          "description" : "Consulta condutores por CPF",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "numeroRegistro",
+          "in" : "path",
+          "description" : "NÃºmero gerado pela BINCO para identificar o condutor",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "numeroSeguranca",
+          "in" : "path",
+          "description" : "NÃºmero gerado a partir de algoritmo especÃ­fico e de propriedade do DENATRAN, composto pelos dados individuais de cada CNH, permitindo a validaÃ§Ã£o da CNH emitida",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ConsultaNumeroSegurancaCnh"
+            }
+          }
+        }
+      }
+    },
+    "/v1/indicadores/alarme/chassi/{chassi}" : {
+      "get" : {
+        "tags" : [ "Consulta de Indicadores" ],
+        "summary" : "Consulta indicador de alarme por chassi",
+        "description" : "O objetivo desta operaÃ§Ã£o Ã© informar da existÃªncia ou nÃ£o de alarme sobre um veÃ­culo",
+        "operationId" : "consultarIndicadorAlarmePorChassi",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        }
+      }
+    },
+    "/v1/indicadores/alarme/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de Indicadores" ],
+        "summary" : "Consulta indicador de alarme por placa",
+        "description" : "O objetivo desta operaÃ§Ã£o Ã© informar da existÃªncia ou nÃ£o de alarme sobre um veÃ­culo",
+        "operationId" : "consultarIndicadorAlarmePorPlaca",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        }
+      }
+    },
+    "/v1/indicadores/restricaoJudicial/chassi/{chassi}" : {
+      "get" : {
+        "tags" : [ "Consulta de Indicadores" ],
+        "summary" : "Consulta indicador de restricao judicial por chassi",
+        "description" : "O objetivo desta operaÃ§Ã£o Ã© informar da existÃªncia ou nÃ£o de indicadores judiciais sobre um veÃ­culo",
+        "operationId" : "consultarIndicadoresRestricaoJudicialPorChassi",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/IndicadoresRestricaoJudicial"
+            }
+          }
+        }
+      }
+    },
+    "/v1/indicadores/restricaoJudicial/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de Indicadores" ],
+        "summary" : "Consulta indicador de restricao judicial por placa",
+        "description" : "O objetivo desta operaÃ§Ã£o Ã© informar da existÃªncia ou nÃ£o de indicadores judiciais sobre um veÃ­culo",
+        "operationId" : "consultarIndicadoresRestricaoJudicialPorPlaca",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/IndicadoresRestricaoJudicial"
+            }
+          }
+        }
+      }
+    },
+    "/v1/indicadores/rouboFurto/chassi/{chassi}" : {
+      "get" : {
+        "tags" : [ "Consulta de Indicadores" ],
+        "summary" : "Consulta indicador de roubo/furto por chassi",
+        "description" : "O objetivo desta operaÃ§Ã£o Ã© informar da existÃªncia ou nÃ£o de roubo e furto sobre um veÃ­culo",
+        "operationId" : "consultarIndicadorRouboFurtoPorChassi",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        }
+      }
+    },
+    "/v1/indicadores/rouboFurto/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de Indicadores" ],
+        "summary" : "Consulta indicador de roubo/furto por placa",
+        "description" : "O objetivo desta operaÃ§Ã£o Ã© informar da existÃªncia ou nÃ£o de roubo e furto sobre um veÃ­culo",
+        "operationId" : "consultarIndicadorRouboFurtoPorPlaca",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "type" : "boolean"
+            }
+          }
+        }
+      }
+    },
+    "/v1/indicadores/sinistro/chassi/{chassi}" : {
+      "get" : {
+        "tags" : [ "Consulta de Indicadores" ],
+        "summary" : "Consulta indicador de sinistro por chassi",
+        "description" : "O objetivo desta operaÃ§Ã£o Ã© informar da existÃªncia ou nÃ£o de indicadores de sinistro sobre um veÃ­culo",
+        "operationId" : "consultarIndicadoresSinistroPorChassi",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/IndicadoresSinistro"
+            }
+          }
+        }
+      }
+    },
+    "/v1/indicadores/sinistro/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de Indicadores" ],
+        "summary" : "Consulta indicador de sinistro por placa",
+        "description" : "O objetivo desta operaÃ§Ã£o Ã© informar da existÃªncia ou nÃ£o de indicadores de sinistro sobre um veÃ­culo",
+        "operationId" : "consultarIndicadoresSinistroPorPlaca",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/IndicadoresSinistro"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/ait/{autoInfracao}/orgaoAutuador/{orgao}/infracao/{codigoInfracao}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta de infraÃ§Ãµes por AIT, infraÃ§Ã£o e Ã³rgÃ£o autuador",
+        "description" : "Consulta de infraÃ§Ãµes por Auto de InfraÃ§Ã£o de TrÃ¢nsito, cÃ³digo da infraÃ§Ã£o e Ã³rgÃ£o autuador",
+        "operationId" : "consultarPorAit",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "orgao",
+          "in" : "path",
+          "description" : "CÃ³digo do Ã³rgÃ£o autuador",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "autoInfracao",
+          "in" : "path",
+          "description" : "nÃºmero do auto de InfraÃ§Ã£o.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "codigoInfracao",
+          "in" : "path",
+          "description" : "CÃ³digo da infraÃ§Ã£o",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/InfracaoPaginada"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/cnpj/{cnpj}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta de infraÃ§Ãµes pelo CNPJ do condutor/proprietÃ¡rio",
+        "description" : "Consulta de infraÃ§Ãµes por CNPJ do condutor/proprietÃ¡rio",
+        "operationId" : "consultarPorCnpj",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cnpj",
+          "in" : "path",
+          "description" : "NÃºmero do CNPJ do infrator",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/InfracaoPaginada"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/cpf/{cpf}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta de infraÃ§Ãµes pelo CPF do condutor/proprietÃ¡rio",
+        "description" : "Consulta de infraÃ§Ãµes pelo CPF do condutor/proprietÃ¡rio",
+        "operationId" : "consultarPorCpf",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cpf",
+          "in" : "path",
+          "description" : "NÃºmero do CPF do infrator",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/InfracaoPaginada"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/habilitacaoEstrangeira/{identificacao}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta de infraÃ§Ãµes pela habilitaÃ§Ã£o estrangeira do condutor/proprietÃ¡rio",
+        "description" : "Consulta de infraÃ§Ãµes pela carteira de habilitaÃ§Ã£o estrangeira do condutor/proprietÃ¡rio",
+        "operationId" : "consultarPorHabilitacaoEstrangeira",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "identificacao",
+          "in" : "path",
+          "description" : "NÃºmero da habilitaÃ§Ã£o estrangeira do infrator",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/InfracaoPaginada"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/ocorrencias/ait/{autoInfracao}/orgaoAutuador/{orgao}/infracao/{codigoInfracao}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta ocorrencias de infraÃ§Ãµes pelo AIT",
+        "description" : "Consulta ocorrencias de infraÃ§Ãµes atravÃ©s do auto de infraÃ§Ã£o de trÃ¢nsito",
+        "operationId" : "consultarOcorrenciasPorAit",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "orgao",
+          "in" : "path",
+          "description" : "CÃ³digo do Ã³rgÃ£o autuador",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "autoInfracao",
+          "in" : "path",
+          "description" : "nÃºmero do auto de InfraÃ§Ã£o.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "codigoInfracao",
+          "in" : "path",
+          "description" : "CÃ³digo da infraÃ§Ã£o",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/OcorrenciasInfracoes"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/pagamentos/ait/{autoInfracao}/orgaoAutuador/{orgao}/infracao/{codigoInfracao}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta pagamentos de infraÃ§Ãµes pelo AIT",
+        "description" : "Consulta pagamentos de infraÃ§Ãµes atravÃ©s do auto de infraÃ§Ã£o de trÃ¢nsito",
+        "operationId" : "consultarPagamentosPorAit",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "orgao",
+          "in" : "path",
+          "description" : "CÃ³digo do Ã³rgÃ£o autuador",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "autoInfracao",
+          "in" : "path",
+          "description" : "nÃºmero do auto de InfraÃ§Ã£o.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "codigoInfracao",
+          "in" : "path",
+          "description" : "CÃ³digo da infraÃ§Ã£o",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido o pagamento da infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido o pagamento da infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/PagamentosInfracoes"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/pgu/{pgu}/uf/{uf}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta de infraÃ§Ãµes pelo CNH modelo antigo do condutor/proprietÃ¡rio",
+        "description" : "Consulta de infraÃ§Ãµes pelo modelo antigo de carteira nacional de habilitaÃ§Ã£o do condutor/proprietÃ¡rio",
+        "operationId" : "consultarPorCnhModeloAntigo",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "uf",
+          "in" : "path",
+          "description" : "Uf de emissÃ£o do PGU",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "pgu",
+          "in" : "path",
+          "description" : "NÃºmero do ProntuÃ¡rio Geral Unificado",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/InfracaoPaginada"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/placa/{placa}/exigibilidade/{situacaoExigibilidade}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta de infraÃ§Ãµes por Placa e Exigibilidade",
+        "description" : "Consulta de infraÃ§Ãµes pela placa do veÃ­culo autuado e exigibilidade da infraÃ§Ã£o",
+        "operationId" : "consultarPorPlaca",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "situacaoExigibilidade",
+          "in" : "path",
+          "description" : "Indica se a infraÃ§Ã£o deve ou nÃ£o ser cobrada pela UF de jurisdiÃ§Ã£o.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/InfracaoPaginada"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/registroCnh/{cnh}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta de infraÃ§Ãµes pelo CNH do condutor/proprietÃ¡rio",
+        "description" : "Consulta de infraÃ§Ãµes pela carteira nacional de habilitaÃ§Ã£o do condutor/proprietÃ¡rio",
+        "operationId" : "consultarPorCnh",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cnh",
+          "in" : "path",
+          "description" : "carteira nacional de habilitaÃ§Ã£o do infrator",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "Data inicial em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "Data final em que pode ter ocorrido a infraÃ§Ã£o de trÃ¢nsito.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/InfracaoPaginada"
+            }
+          }
+        }
+      }
+    },
+    "/v1/infracoes/renainf/{numeroRenainf}" : {
+      "get" : {
+        "tags" : [ "Consulta de InfraÃ§Ãµes" ],
+        "summary" : "Consulta de infraÃ§Ãµes por RENAINF",
+        "description" : "Consulta de infraÃ§Ãµes pelo cÃ³digo de registro da infraÃ§Ã£o de trÃ¢nsito no RENAINF",
+        "operationId" : "consultarPorRenainf",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "numeroRenainf",
+          "in" : "path",
+          "description" : "CÃ³digo de registro da infraÃ§Ã£o de trÃ¢nsito no RENAINF, gerado automaticamente na BINIT na efetivaÃ§Ã£o do registro da infraÃ§Ã£o.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/InfracaoPaginada"
+            }
+          }
+        }
+      }
+    },
+    "/v1/restricoesJudiciaisAtivas/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de RestriÃ§Ãµes Judiciais" ],
+        "summary" : "Consulta de restriÃ§Ãµes judiciais ativas pela placa e Renavam",
+        "description" : "Consulta de restriÃ§Ãµes judiciais ativas pela placa e Renavam do veÃ­culo",
+        "operationId" : "consultarRestricoesJudiciaisAtivasPorPlaca",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "data inicial da inclusÃ£o da restriÃ§Ã£o judicial",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "data final da inclusÃ£o da restriÃ§Ã£o judicial",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ProcessosCompletos"
+            }
+          }
+        }
+      }
+    },
+    "/v1/restricoesJudiciaisAtivas/placa/{placa}/renavam/{renavam}" : {
+      "get" : {
+        "tags" : [ "Consulta de RestriÃ§Ãµes Judiciais" ],
+        "summary" : "Consulta de restriÃ§Ãµes judiciais ativas pela placa ",
+        "description" : "Consulta de restriÃ§Ãµes judiciais ativas pela placa do veÃ­culo",
+        "operationId" : "consultarRestricoesJudiciaisAtivas",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "dataInicio",
+          "in" : "query",
+          "description" : "data inicial da inclusÃ£o da restriÃ§Ã£o judicial",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "dataFim",
+          "in" : "query",
+          "description" : "data final da inclusÃ£o da restriÃ§Ã£o judicial",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Processos"
+            }
+          }
+        }
+      }
+    },
+    "/v1/rouboFurto/emAberto/chassi/{chassi}" : {
+      "get" : {
+        "tags" : [ "Consulta de Roubo e Furto" ],
+        "summary" : "Consulta Roubo e Furto em aberto por Chassi",
+        "description" : "Consulta ocorrÃªncias policiais de roubo e rurto em aberto (declaraÃ§Ã£o com ou sem recuperaÃ§Ã£o, porÃ©m sem devoluÃ§Ã£o) ou alarme ativo registrado para o veÃ­culo do chassi informado",
+        "operationId" : "consultarRouboFurtoEmAbertoPorChassi",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/OcorrenciasRouboFurto"
+            }
+          }
+        }
+      }
+    },
+    "/v1/rouboFurto/emAberto/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de Roubo e Furto" ],
+        "summary" : "Consulta Roubo e Furto em aberto por Placa",
+        "description" : "Consulta ocorrÃªncias policiais de roubo e rurto em aberto (declaraÃ§Ã£o com ou sem recuperaÃ§Ã£o, porÃ©m sem devoluÃ§Ã£o) ou alarme ativo registrado para o veÃ­culo da placa informada",
+        "operationId" : "consultarRouboFurtoEmAbertoPorPlaca",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/OcorrenciasRouboFurto"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/cambio/{cambio}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por cÃ¢mbio",
+        "description" : "Consulta de veÃ­culo por cÃ¢mbio",
+        "operationId" : "consultarVeiculoPorCambio",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cambio",
+          "in" : "path",
+          "description" : "NÃºmero da caixa de cÃ¢mbio informado pelo fabricante",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/VeiculoPaginado"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/chassi/{chassi}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por chassi",
+        "description" : "Consulta de veÃ­culo por chassi",
+        "operationId" : "consultarVeiculoPorChassi",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/VeiculoPaginado"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/codigoSegurancaCrv/{crv}/cnpj/{cnpj}/renavam/{renavam}/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta validade nÃºmero de seguranÃ§a CRV",
+        "description" : "Consulta validade nÃºmero de seguranÃ§a CRV",
+        "operationId" : "consultarNumeroSegurancaCrvPorCnpj",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cnpj",
+          "in" : "path",
+          "description" : "NÃºmero do CNPJ do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "crv",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ConsultaNumeroSegurancaCrv"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/codigoSegurancaCrv/{crv}/cpf/{cpf}/renavam/{renavam}/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta validade nÃºmero de seguranÃ§a CRV",
+        "description" : "Consulta validade nÃºmero de seguranÃ§a CRV",
+        "operationId" : "consultarNumeroSegurancaCrvPorCpf",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cpf",
+          "in" : "path",
+          "description" : "NÃºmero do CPF do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "crv",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ConsultaNumeroSegurancaCrv"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/comunicacaoVenda/cnpj/{cnpj}/renavam/{renavam}/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta comunicaÃ§Ã£o de venda do veÃ­culo",
+        "description" : "Consulta comunicaÃ§Ã£o de venda do veÃ­culo com a placa, Renavam e proprietÃ¡rio informado",
+        "operationId" : "consultarComunicacaoVendaCNPJ",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cnpj",
+          "in" : "path",
+          "description" : "NÃºmero do CNPJ do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ComunicacaoVenda"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/comunicacaoVenda/cpf/{cpf}/renavam/{renavam}/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta comunicaÃ§Ã£o de venda do veÃ­culo",
+        "description" : "Consulta comunicaÃ§Ã£o de venda do veÃ­culo com a placa, Renavam e proprietÃ¡rio informado",
+        "operationId" : "consultarComunicacaoVendaCPF",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cpf",
+          "in" : "path",
+          "description" : "NÃºmero do CPF do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ComunicacaoVenda"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/enderecoPossuidor/placa/{placa}/renavam/{renavam}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta do endereÃ§o do possuidor do veÃ­culo",
+        "description" : "Consulta do endereÃ§o do possuidor do veÃ­culo com a placa e Renavam informados",
+        "operationId" : "consultarRestricoesJudiciaisAtivas",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/EnderecoPossuidor"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/motor/{motor}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por motor",
+        "description" : "Consulta de veÃ­culo por motor",
+        "operationId" : "consultarVeiculoPorMotor",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "motor",
+          "in" : "path",
+          "description" : "NÃºmero do motor informado pelo fabricante",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/VeiculoPaginado"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/multaInterestadual/cnpj/{cnpj}/renavam/{renavam}/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta multas interestaduais do proprietÃ¡rio do veÃ­culo",
+        "description" : "Consulta multas interestaduais do proprietÃ¡rio do veÃ­culo com a placa e Renavam e proprietÃ¡rio informado",
+        "operationId" : "consultarMultaCNPJ",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cnpj",
+          "in" : "path",
+          "description" : "NÃºmero do CNPJ do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/MultasInterestaduais"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/multaInterestadual/cpf/{cpf}/renavam/{renavam}/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta multas interestaduais do proprietÃ¡rio do veÃ­culo",
+        "description" : "Consulta multas interestaduais do proprietÃ¡rio do veÃ­culo com a placa e Renavam e proprietÃ¡rio informado",
+        "operationId" : "consultarMultaCPF",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cpf",
+          "in" : "path",
+          "description" : "NÃºmero do CPF do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/MultasInterestaduais"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/placa/{placa}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por placa",
+        "description" : "Consulta de veÃ­culo por placa",
+        "operationId" : "consultarVeiculoPorPlaca",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/VeiculoPaginado"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/proprietario/cnpj/{cnpj}/chassi/{chassi}/renavam/{renavam}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por proprietario, chassi e renavam",
+        "description" : "Consulta veÃ­culo por proprietario, chassi e renavam",
+        "operationId" : "consultarVeiculoPorProprietarioChassiRenavamCnpj",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cnpj",
+          "in" : "path",
+          "description" : "NÃºmero do CNPJ do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Veiculo"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/proprietario/cnpj/{cnpj}/placa/{placa}/renavam/{renavam}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por proprietario, placa e renavam",
+        "description" : "Consulta veÃ­culo por proprietario, placa e renavam",
+        "operationId" : "consultarVeiculoPorProprietarioPlacaRenavamCnpj",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cnpj",
+          "in" : "path",
+          "description" : "NÃºmero do CNPJ do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Veiculo"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/proprietario/cnpj/{identificacao}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por proprietario",
+        "description" : "Consulta de veÃ­culo pela identificaÃ§Ã£o Ãºnica do proprietÃ¡rio pessoa jurÃ­dica",
+        "operationId" : "consultarVeiculoPorProprietarioCnpj",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "identificacao",
+          "in" : "path",
+          "description" : "NÃºmero do CNPJ do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "anoFabricacao",
+          "in" : "query",
+          "description" : "Ano de fabricaÃ§Ã£o do veÃ­culo",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/VeiculoPaginado"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/proprietario/cpf/{cpf}/chassi/{chassi}/renavam/{renavam}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por proprietario, chassi e renavam",
+        "description" : "Consulta veÃ­culo por proprietario, chassi e renavam",
+        "operationId" : "consultarVeiculoPorProprietarioChassiRenavamCpf",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cpf",
+          "in" : "path",
+          "description" : "NÃºmero do CPF do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Veiculo"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/proprietario/cpf/{cpf}/placa/{placa}/renavam/{renavam}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por proprietario, placa e renavam",
+        "description" : "Consulta veÃ­culo por proprietario, placa e renavam",
+        "operationId" : "consultarVeiculoPorProprietarioPlacaRenavamCpf",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "cpf",
+          "in" : "path",
+          "description" : "NÃºmero do CPF do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "placa",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Veiculo"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/proprietario/cpf/{identificacao}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por proprietario",
+        "description" : "Consulta de veÃ­culo pela identificaÃ§Ã£o Ãºnica do proprietÃ¡rio pessoa fÃ­sica",
+        "operationId" : "consultarVeiculoPorProprietarioCpf",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "identificacao",
+          "in" : "path",
+          "description" : "NÃºmero do CPF do proprietÃ¡rio",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "anoFabricacao",
+          "in" : "query",
+          "description" : "Ano de fabricaÃ§Ã£o do veÃ­culo",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/VeiculoPaginado"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/recall/chassi/{chassi}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta de recalls em aberto do veÃ­culo",
+        "description" : "Consulta de recalls em aberto do veÃ­culo com o chassi informado",
+        "operationId" : "consultarRecallPorChassi",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "chassi",
+          "in" : "path",
+          "description" : "Chassi do veÃ­culo",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/Recalls"
+            }
+          }
+        }
+      }
+    },
+    "/v1/veiculos/renavam/{renavam}" : {
+      "get" : {
+        "tags" : [ "Consulta de VeÃ­culos" ],
+        "summary" : "Consulta veÃ­culo por RENAVAM",
+        "description" : "Consulta de veÃ­culo por RENAVAM",
+        "operationId" : "consultarVeiculoPorRenavam",
+        "produces" : [ "application/json; charset=utf-8" ],
+        "parameters" : [ {
+          "name" : "x-cpf-usuario",
+          "in" : "header",
+          "description" : "CPF do usuÃ¡rio que estÃ¡ fazendo a requisiÃ§Ã£o",
+          "required" : true,
+          "type" : "string",
+          "default" : ""
+        }, {
+          "name" : "renavam",
+          "in" : "path",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "idUltimoRegistro",
+          "in" : "query",
+          "description" : "Consulta Ã© feita a partir do registro com o id informado nesse campo",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/VeiculoPaginado"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "AlteracaoPermitidaResumida" : {
+      "type" : "object",
+      "required" : [ "codigoAlteracao", "codigoSistema", "codigoTipoAlteracao", "descricaoAlteracao" ],
+      "properties" : {
+        "codigoTipoAlteracao" : {
+          "type" : "string"
+        },
+        "codigoAlteracao" : {
+          "type" : "string"
+        },
+        "descricaoAlteracao" : {
+          "type" : "string"
+        },
+        "codigoSistema" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "xml" : {
+        "name" : "AlteracaoPermitidaResumida"
+      }
+    },
+    "ComunicacaoVenda" : {
+      "type" : "object",
+      "properties" : {
+        "placa" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)"
+        },
+        "renavam" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores"
+        },
+        "numeroIdentificacaoProprietario" : {
+          "type" : "string"
+        },
+        "dataVenda" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data em que ocorreu a venda do veÃ­culo."
+        },
+        "dataRegistroVenda" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data em que foi registrada a comunicaÃ§Ã£o de venda para o veÃ­culo."
+        },
+        "tipoIdentificacaoComprador" : {
+          "type" : "string"
+        },
+        "numeroIdentificacaoComprador" : {
+          "type" : "string"
+        },
+        "nomeComprador" : {
+          "type" : "string",
+          "description" : "Nome do comprador do veÃ­culo, informado na comunicaÃ§Ã£o de venda."
+        }
+      },
+      "xml" : {
+        "name" : "comunicacaovenda"
+      }
+    },
+    "Condutor" : {
+      "type" : "object",
+      "properties" : {
+        "ufDominio" : {
+          "type" : "string",
+          "description" : "UF detentora do prontuÃ¡rio do candidato/condutor."
+        },
+        "numeroFormularioRenach" : {
+          "type" : "string",
+          "description" : "NÃºmero do formulÃ¡rio RENACH do candidato/condutor gerado pelos DETRANs a cada novo processo solicitado pelo mesmo."
+        },
+        "numeroRegistro" : {
+          "type" : "string",
+          "description" : "NÃºmero gerado pela BINCO para identificar o condutor"
+        },
+        "numeroFormularioCnh" : {
+          "type" : "string",
+          "description" : "NÃºmero do formulÃ¡rio(espelho) CNH do condutor, informado pela grÃ¡fica"
+        },
+        "numeroListaImpedimento" : {
+          "type" : "string",
+          "description" : "NÃºmero do documento gerador do impedimento Ã  conduÃ§Ã£o de veÃ­culos automotores"
+        },
+        "nome" : {
+          "type" : "string"
+        },
+        "dataNascimento" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "sexo" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoSexo" : {
+          "type" : "string"
+        },
+        "nomeMae" : {
+          "type" : "string"
+        },
+        "nomePai" : {
+          "type" : "string"
+        },
+        "tipoDocumento" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoDocumento" : {
+          "type" : "string"
+        },
+        "numeroDocumento" : {
+          "type" : "string"
+        },
+        "orgaoExpedidorDocumento" : {
+          "type" : "string"
+        },
+        "ufExpedidorDocumento" : {
+          "type" : "string"
+        },
+        "cpf" : {
+          "type" : "string"
+        },
+        "localidadeNascimento" : {
+          "type" : "string"
+        },
+        "descricaoLocalidadeNascimento" : {
+          "type" : "string"
+        },
+        "nacionalidade" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoNacionalidade" : {
+          "type" : "string"
+        },
+        "dataCadastramento" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data de cadastro do candidato no Detran"
+        },
+        "enderecoLogradouro" : {
+          "type" : "string"
+        },
+        "enderecoNumero" : {
+          "type" : "string"
+        },
+        "enderecoComplemento" : {
+          "type" : "string"
+        },
+        "enderecoBairro" : {
+          "type" : "string"
+        },
+        "enderecoCep" : {
+          "type" : "string"
+        },
+        "enderecoMunicipio" : {
+          "type" : "string"
+        },
+        "descricaoEnderecoMunicipio" : {
+          "type" : "string"
+        },
+        "enderecoUf" : {
+          "type" : "string"
+        },
+        "numeroPgu" : {
+          "type" : "string",
+          "description" : "NÃºmero do ProntuÃ¡rio Geral Unificado"
+        },
+        "motivoRequerimento1" : {
+          "type" : "string"
+        },
+        "descricaoMotivoRequerimento1" : {
+          "type" : "string"
+        },
+        "motivoRequerimento2" : {
+          "type" : "string"
+        },
+        "descricaoMotivoRequerimento2" : {
+          "type" : "string"
+        },
+        "motivoRequerimento3" : {
+          "type" : "string"
+        },
+        "descricaoMotivoRequerimento3" : {
+          "type" : "string"
+        },
+        "motivoRequerimento4" : {
+          "type" : "string"
+        },
+        "descricaoMotivoRequerimento4" : {
+          "type" : "string"
+        },
+        "dataPrimeiraHabilitacao" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data em que foi autorizada a primeira habilitaÃ§Ã£o do Candidato/condutor"
+        },
+        "ufPrimeiraHabilitacao" : {
+          "type" : "string"
+        },
+        "categoriaAtual" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica a categoria na qual o condutor estÃ¡ habilitado, pertencente Ã  Tabela de Categorias do cÃ³digo Nacional de trÃ¢nsito"
+        },
+        "categoriaRebaixada" : {
+          "type" : "string"
+        },
+        "categoriaAutorizada" : {
+          "type" : "string",
+          "description" : "SerÃ¡ a maior categoria informada nos eventos de Curso/Exame que preencher todas os requisitos necessÃ¡rios Ã  autorizaÃ§Ã£o da EmissÃ£o da nova CNH"
+        },
+        "dataValidadeCnh" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "ufHabilitacaoAtual" : {
+          "type" : "string",
+          "description" : "UF onde foi expedida a Carteira Nacional de HabilitaÃ§Ã£o Atual"
+        },
+        "quadroObservacoesCnh" : {
+          "type" : "string",
+          "description" : "Informa as restriÃ§Ãµes ou especializaÃ§Ãµes, expressas no quadro de observaÃ§Ãµes da cÃ©dula da CNH, expedida para o Condutor RENACH"
+        },
+        "ufSolicitanteTransferencia" : {
+          "type" : "string",
+          "description" : "UF que estÃ¡ solicitando a transferÃªncia da Carteira Nacional de HabilitaÃ§Ã£o"
+        },
+        "situacaoCnh" : {
+          "type" : "string"
+        },
+        "descricaoSituacaoCnh" : {
+          "type" : "string"
+        },
+        "situacaoCnhAnterior" : {
+          "type" : "string"
+        },
+        "descricaoSituacaoCnhAnterior" : {
+          "type" : "string"
+        },
+        "permissionario" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "cancelamento" : {
+          "type" : "string"
+        },
+        "dataUltimaEmissaoHistorico" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data de emissÃ£o da Ãºltima CNH registrada no HEMI"
+        },
+        "codigoTransacaoUltimaAtualizacao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "dataTransacaoUltimaAtualizacao" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data em que foi executada a Ãºltima transaÃ§Ã£o para um cidadÃ£o/candidato/condutor"
+        },
+        "classificacaoCursoTpp" : {
+          "type" : "string",
+          "description" : "Curso de Transporte de Produtos Perigosos (TPP)"
+        },
+        "descricaoClassificacaoCursoTpp" : {
+          "type" : "string"
+        },
+        "ufCursoTpp" : {
+          "type" : "string"
+        },
+        "dataCursoTpp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "classificacaoCursoTe" : {
+          "type" : "string",
+          "description" : "Curso de Transporte Escolar (TE)"
+        },
+        "descricaoClassificacaoCursoTe" : {
+          "type" : "string"
+        },
+        "ufCursoTe" : {
+          "type" : "string"
+        },
+        "dataCursoTe" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "classificacaoCursoTcp" : {
+          "type" : "string",
+          "description" : "Curso de Transporte Coletivo de Passageiros (TCP)"
+        },
+        "descricaoClassificacaoCursoTcp" : {
+          "type" : "string"
+        },
+        "ufCursoTcp" : {
+          "type" : "string"
+        },
+        "dataCursoTcp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "classificacaoCursoTve" : {
+          "type" : "string",
+          "description" : "Curso de Transporte VeÃ­culos de EmergÃªncia (TVE)"
+        },
+        "descricaoClassificacaoCursoTve" : {
+          "type" : "string"
+        },
+        "ufCursoTve" : {
+          "type" : "string"
+        },
+        "dataCursoTve" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "classificacaoCursoTci" : {
+          "type" : "string",
+          "description" : "Curso de Transporte Carga IndivisÃ­vel (TCI)"
+        },
+        "descricaoClassificacaoCursoTci" : {
+          "type" : "string"
+        },
+        "ufCursoTci" : {
+          "type" : "string"
+        },
+        "dataCursoTci" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "classificacaoCursoTmt" : {
+          "type" : "string",
+          "description" : "Curso de AtualizaÃ§Ã£o Mototaxista (TMT)"
+        },
+        "descricaoClassificacaoCursoTmt" : {
+          "type" : "string"
+        },
+        "ufCursoTmt" : {
+          "type" : "string"
+        },
+        "dataCursoTmt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "classificacaoCursoTmf" : {
+          "type" : "string",
+          "description" : "Curso de AtualizaÃ§Ã£o Motofretista (TMF)"
+        },
+        "descricaoClassificacaoCursoTmf" : {
+          "type" : "string"
+        },
+        "ufCursoTmf" : {
+          "type" : "string"
+        },
+        "dataCursoTmf" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "ufCursoReciclagemInfrator" : {
+          "type" : "string"
+        },
+        "dataCursoReciclagemInfrator" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "modalidadeCursoReciclagemInfrator" : {
+          "type" : "string"
+        },
+        "descricaoModalidadeCursoReciclagemInfrator" : {
+          "type" : "string"
+        },
+        "ufCursoAtualizacaoRenovacaoCnh" : {
+          "type" : "string"
+        },
+        "dataCursoAtualizacaoRenovacaoCnh" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "modalidadeCursoAtualizacaoRenovacaoCnh" : {
+          "type" : "string"
+        },
+        "descricaoModalidadeCursoAtualizacaoRenovacaoCnh" : {
+          "type" : "string"
+        },
+        "registroNacionalEstrangeiro" : {
+          "type" : "string",
+          "description" : "Dados do documento de identificaÃ§Ã£o do cidadÃ£o estrangeiro expedido em territÃ³rio nacional pela PolÃ­cia Federal"
+        },
+        "paisOrigemHabilitacaoEstrangeira" : {
+          "type" : "string"
+        },
+        "descricaoPaisOrigemHabilitacaoEstrangeira" : {
+          "type" : "string"
+        },
+        "identificacaoHabilitacaoEstrangeira" : {
+          "type" : "string"
+        },
+        "dataValidadeHabilitacaoEstrangeira" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "numeroFormularioPid" : {
+          "type" : "string",
+          "description" : "NÃºmero que identifica o espelho do formulÃ¡rio usado pela GrÃ¡fica para emitir uma nova PID(PermissÃ£o Internacional para Dirigir)"
+        },
+        "dataValidadePid" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "ufExpedicaoPid" : {
+          "type" : "string"
+        },
+        "numeroFormularioCnhBasePid" : {
+          "type" : "string"
+        },
+        "motivoRequerimentoPid1" : {
+          "type" : "string"
+        },
+        "descricaoMotivoRequerimentoPid1" : {
+          "type" : "string"
+        },
+        "motivoRequerimentoPid2" : {
+          "type" : "string"
+        },
+        "descricaoMotivoRequerimentoPid2" : {
+          "type" : "string"
+        },
+        "motivoRequerimentoPid3" : {
+          "type" : "string"
+        },
+        "descricaoMotivoRequerimentoPid3" : {
+          "type" : "string"
+        },
+        "motivoRequerimentoPid4" : {
+          "type" : "string"
+        },
+        "descricaoMotivoRequerimentoPid4" : {
+          "type" : "string"
+        },
+        "situacaoPid" : {
+          "type" : "string"
+        },
+        "restricoesMedicas" : {
+          "type" : "string",
+          "description" : "InformaÃ§Ãµes a respeito de restriÃ§Ãµes mÃ©dicas conforme determinaÃ§Ã£o do mÃ©dico (texto livre)"
+        },
+        "quantidadeOcorrenciasImpedimentos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "ocorrencias" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "ocorrencia",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/Ocorrencia"
+          }
+        }
+      }
+    },
+    "Condutores" : {
+      "type" : "object",
+      "properties" : {
+        "condutores" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "condutor"
+          },
+          "items" : {
+            "$ref" : "#/definitions/Condutor"
+          }
+        }
+      }
+    },
+    "ConsultaNumeroSegurancaCnh" : {
+      "type" : "object",
+      "properties" : {
+        "nomeMae" : {
+          "type" : "string",
+          "description" : "Nome da mÃ£e do condutor"
+        },
+        "dataEmissao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "nomeCondutor" : {
+          "type" : "string"
+        },
+        "numeroRegistro" : {
+          "type" : "string",
+          "description" : "NÃºmero gerado pela BINCO para identificar o condutor"
+        },
+        "numeroFormularioCnh" : {
+          "type" : "string",
+          "description" : "NÃºmero do formulÃ¡rio(espelho) CNH do condutor, informado pela grÃ¡fica"
+        },
+        "dataValidade" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "categoria" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica a categoria na qual o condutor estÃ¡ habilitado, pertencente Ã  Tabela de Categorias do cÃ³digo Nacional de trÃ¢nsito"
+        },
+        "numeroSeguranca" : {
+          "type" : "string",
+          "description" : "NÃºmero gerado a partir de algoritmo especÃ­fico e de propriedade do DENATRAN, composto pelos dados individuais de cada CNH, permitindo a validaÃ§Ã£o da CNH emitida"
+        },
+        "numeroFormularioRenach" : {
+          "type" : "string",
+          "description" : "NÃºmero do formulÃ¡rio RENACH do candidato/condutor gerado pelos DETRANs a cada novo processo solicitado pelo mesmo."
+        },
+        "dataNascimento" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "codigoNacionalidade" : {
+          "type" : "string"
+        },
+        "descricaoNacionalidade" : {
+          "type" : "string"
+        },
+        "nomePai" : {
+          "type" : "string",
+          "description" : "Nome do pai do condutor"
+        },
+        "enderecoLogradouro" : {
+          "type" : "string"
+        },
+        "enderecoNumero" : {
+          "type" : "string"
+        },
+        "enderecoComplemento" : {
+          "type" : "string"
+        },
+        "enderecoBairro" : {
+          "type" : "string"
+        },
+        "enderecoCep" : {
+          "type" : "string"
+        },
+        "enderecoCodigoMunicipio" : {
+          "type" : "string"
+        },
+        "enderecoDescricaoMunicipio" : {
+          "type" : "string"
+        },
+        "enderecoUf" : {
+          "type" : "string"
+        },
+        "dataPrimeiraHabilitacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "ufPrimeiraHabilitacao" : {
+          "type" : "string"
+        },
+        "ufHabilitacaoAtual" : {
+          "type" : "string",
+          "description" : "UF onde foi expedida a Carteira Nacional de HabilitaÃ§Ã£o Atual"
+        },
+        "ufDominio" : {
+          "type" : "string"
+        },
+        "indicadorInfracoesNoUltimoAno" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "ConsultaNumeroSegurancaCrv" : {
+      "type" : "object",
+      "properties" : {
+        "numeroSegurancaCrv" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "viaDocumento" : {
+          "type" : "string",
+          "description" : "NÃºmero da via do documento a ser impresso (CRV ou CRLV)"
+        },
+        "codigoRenavam" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores"
+        },
+        "nomeProprietario" : {
+          "type" : "string"
+        },
+        "codigoTipoProprietario" : {
+          "type" : "string"
+        },
+        "descricaoTipoProprietario" : {
+          "type" : "string"
+        },
+        "numeroIdentificacaoProprietario" : {
+          "type" : "string"
+        },
+        "placa" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)"
+        },
+        "chassi" : {
+          "type" : "string",
+          "description" : "Chassi do veÃ­culo"
+        },
+        "codigoEspecieVeiculo" : {
+          "type" : "string"
+        },
+        "descricaoEspecieVeiculo" : {
+          "type" : "string"
+        },
+        "codigoTipoVeiculo" : {
+          "type" : "string"
+        },
+        "descricaoTipoVeiculo" : {
+          "type" : "string"
+        },
+        "codigoCombustivel" : {
+          "type" : "string"
+        },
+        "descricaoCombustivel" : {
+          "type" : "string"
+        },
+        "codigoMarcaModelo" : {
+          "type" : "string"
+        },
+        "descricaoMarcaModelo" : {
+          "type" : "string"
+        },
+        "anoFabricacao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "anoModelo" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "codigoCor" : {
+          "type" : "string",
+          "description" : "CÃ³digo para identificar a cor predominante de um veÃ­culo"
+        },
+        "descricaoCor" : {
+          "type" : "string"
+        },
+        "ufExpedidora" : {
+          "type" : "string"
+        },
+        "codigoMunicipio" : {
+          "type" : "string"
+        },
+        "descricaoMunicipio" : {
+          "type" : "string"
+        },
+        "dataEmissaoCrv" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "codigoRestricao1" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao1" : {
+          "type" : "string"
+        },
+        "codigoRestricao2" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao2" : {
+          "type" : "string"
+        },
+        "codigoRestricao3" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao3" : {
+          "type" : "string"
+        },
+        "codigoRestricao4" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao4" : {
+          "type" : "string"
+        },
+        "indicadorComunicacaoVenda" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRestricaoRenajud" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorInfracaoInterestadual" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRouboFurto" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorAlarme" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "EnderecoPossuidor" : {
+      "type" : "object",
+      "properties" : {
+        "origemPossuidor" : {
+          "type" : "string",
+          "description" : "Indica a origem dos dados do possuidor do veÃ­culo."
+        },
+        "descricaoOrigemPossuidor" : {
+          "type" : "string"
+        },
+        "tipoDocumentoPossuidor" : {
+          "type" : "string"
+        },
+        "descricaoDocumentoPosssuidor" : {
+          "type" : "string"
+        },
+        "numeroDocumentoPossuidor" : {
+          "type" : "string",
+          "description" : "NÃºmero da inscriÃ§Ã£o no CPF ou no CNPJ do proprietÃ¡rio/arrendatÃ¡rio do veÃ­culo."
+        },
+        "nomePossuidor" : {
+          "type" : "string"
+        },
+        "enderecoLogradouro" : {
+          "type" : "string",
+          "description" : "Nome da rua, avenida, praÃ§a, etc, onde reside o possuidor do veÃ­culo"
+        },
+        "enderecoNumero" : {
+          "type" : "string"
+        },
+        "enderecoComplemento" : {
+          "type" : "string"
+        },
+        "enderecoBairrro" : {
+          "type" : "string"
+        },
+        "enderecoMunicipio" : {
+          "type" : "string"
+        },
+        "descricaoEnderecoMunicipio" : {
+          "type" : "string"
+        },
+        "enderecoUf" : {
+          "type" : "string"
+        },
+        "enderecoCep" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "enderecoPossuidor"
+      }
+    },
+    "ExtratoInfracoes" : {
+      "type" : "object",
+      "required" : [ "ocorrencias" ],
+      "properties" : {
+        "quantidade" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de infraÃ§Ãµes retornados na consulta"
+        },
+        "quantidadeReal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Total de infraÃ§Ãµes na base do Denatran que atendem os critÃ©rios da consulta realizada"
+        },
+        "ocorrencias" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "ocorrencia",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/OcorrenciaInfracaoCondutor"
+          }
+        }
+      }
+    },
+    "IndicadoresRestricaoJudicial" : {
+      "type" : "object",
+      "required" : [ "indicadorCirculacao", "indicadorLicenciamento", "indicadorPenhora", "indicadorTransferencia" ],
+      "properties" : {
+        "indicadorTransferencia" : {
+          "type" : "boolean",
+          "description" : "Indica se o veÃ­culo pesquisado contÃ©m restriÃ§Ã£o judicial de transferÃªncia",
+          "default" : false
+        },
+        "indicadorLicenciamento" : {
+          "type" : "boolean",
+          "description" : "Indica se o veÃ­culo pesquisado contÃ©m restriÃ§Ã£o judicial de licenciamento",
+          "default" : false
+        },
+        "indicadorCirculacao" : {
+          "type" : "boolean",
+          "description" : "Indica se o veÃ­culo pesquisado contÃ©m restriÃ§Ã£o judicial de circulaÃ§Ã£o",
+          "default" : false
+        },
+        "indicadorPenhora" : {
+          "type" : "boolean",
+          "description" : "Indica se o veÃ­culo pesquisado contÃ©m restriÃ§Ã£o judicial de penhora",
+          "default" : false
+        }
+      }
+    },
+    "IndicadoresSinistro" : {
+      "type" : "object",
+      "required" : [ "indicadorGrandeMonta", "indicadorMediaMonta", "indicadorRecuperado" ],
+      "properties" : {
+        "indicadorMediaMonta" : {
+          "type" : "boolean",
+          "description" : "Indica se o veÃ­culo pesquisado contÃ©m sinistro de MÃ©dia Monta",
+          "default" : false
+        },
+        "indicadorGrandeMonta" : {
+          "type" : "boolean",
+          "description" : "Indica se o veÃ­culo pesquisado contÃ©m sinistro de Grande Monta",
+          "default" : false
+        },
+        "indicadorRecuperado" : {
+          "type" : "boolean",
+          "description" : "Indica se o veÃ­culo pesquisado contÃ©m sinistro Recuperado",
+          "default" : false
+        }
+      }
+    },
+    "Infracao" : {
+      "type" : "object",
+      "properties" : {
+        "codigoInfracao" : {
+          "type" : "string"
+        },
+        "codigoDesdobramentoInfracao" : {
+          "type" : "string"
+        },
+        "descricaoInfracao" : {
+          "type" : "string"
+        },
+        "codigoRenainf" : {
+          "type" : "string",
+          "description" : "CÃ³digo de registro da infraÃ§Ã£o de trÃ¢nsito no RENAINF, gerado automaticamente na BINIT na efetivaÃ§Ã£o do registro da infraÃ§Ã£o."
+        },
+        "dataCadastroInfracao" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data do registro da infraÃ§Ã£o no sistema RENAINF."
+        },
+        "ufOrgaoAutuador" : {
+          "type" : "string"
+        },
+        "placa" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)"
+        },
+        "codigoRenavam" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores"
+        },
+        "codigoMarcaModelo" : {
+          "type" : "string"
+        },
+        "descricaoMarcaModelo" : {
+          "type" : "string"
+        },
+        "codigoTipoVeiculo" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoTipoVeiculo" : {
+          "type" : "string"
+        },
+        "codigoCorVeiculo" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "CÃ³digo para identificar a cor predominante de um veÃ­culo"
+        },
+        "descricaoCorVeiculo" : {
+          "type" : "string"
+        },
+        "codigoEspecieVeiculo" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoEspecieVeiculo" : {
+          "type" : "string"
+        },
+        "codigoCarroceriaVeiculo" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoCarroceriaVeiculo" : {
+          "type" : "string"
+        },
+        "codigoCategoriaVeiculo" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoCategoriaVeiculo" : {
+          "type" : "string"
+        },
+        "getufJurisdicaoVeiculo" : {
+          "type" : "string",
+          "description" : "Sigla da Unidade da FederaÃ§Ã£o onde o veÃ­culo foi emplacado"
+        },
+        "getufEmplacamentoInformada" : {
+          "type" : "string",
+          "description" : "Sigla da Unidade da FederaÃ§Ã£o de emplacamento de veÃ­culos de placa antiga (amarela)"
+        },
+        "codigoMunicipioEmplacamento" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoMunicipioEmplacamento" : {
+          "type" : "string"
+        },
+        "codigoPaisVeiculo" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "CÃ³digo que identifica o PaÃ­s do veÃ­culo, pertencente a tabela definda pelo Contran"
+        },
+        "descricaoPaisVeiculo" : {
+          "type" : "string"
+        },
+        "codigoRestricao1" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao1" : {
+          "type" : "string"
+        },
+        "codigoRestricao2" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao2" : {
+          "type" : "string"
+        },
+        "codigoRestricao3" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao3" : {
+          "type" : "string"
+        },
+        "codigoRestricao4" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao4" : {
+          "type" : "string"
+        },
+        "indicadorRestricaoRenajud" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRestricaoRenavam" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRouboFurtoRenavam" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "codigoOrgaoAutuador" : {
+          "type" : "string"
+        },
+        "descricaoOrgaoAutuador" : {
+          "type" : "string"
+        },
+        "numeroAutoInfracao" : {
+          "type" : "string",
+          "description" : "nÃºmero do auto de InfraÃ§Ã£o."
+        },
+        "indicadorAssinaturaAuto" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Indica se um auto de infraÃ§Ã£o foi assinado pelo condutor."
+        },
+        "descricaoAssinaturaAuto" : {
+          "type" : "string"
+        },
+        "modeloCnhCondutor" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Informa se a Carteira de HabilitaÃ§Ã£o do condutor Ã© de CNH com foto (Renach), CNH sem foto (PGU), Carteira de HabilitaÃ§Ã£o Estrangeira ou se o condutor nÃ£o possui habilitaÃ§Ã£o."
+        },
+        "descricaoModeloCnhCondutor" : {
+          "type" : "string"
+        },
+        "numeroRegistroCnhCondutor" : {
+          "type" : "string",
+          "description" : "NÃºmero gerado pela BINCO para identificar o condutor"
+        },
+        "ufExpedicaoCnhCondutor" : {
+          "type" : "string"
+        },
+        "dataInfracao" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data em que ocorreu a infraÃ§Ã£o de trÃ¢nsito."
+        },
+        "horaInfracao" : {
+          "type" : "string"
+        },
+        "localOcorrenciaInfracao" : {
+          "type" : "string"
+        },
+        "codigoMunicipioInfracao" : {
+          "type" : "string"
+        },
+        "descricaoMunicipioInfracao" : {
+          "type" : "string"
+        },
+        "tipoAuto" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoTipoAuto" : {
+          "type" : "string"
+        },
+        "numeroDocumentoCondutorNaoHabilitado" : {
+          "type" : "string"
+        },
+        "tipoDocumentoCondutorNaoHabilitado" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoTipoDocumentoCondutorNaoHabilitado" : {
+          "type" : "string"
+        },
+        "medicaoReal" : {
+          "type" : "number",
+          "description" : "MediÃ§Ã£o realizada. Nas infraÃ§Ãµes de excesso de Velocidade: este campo contem a velocidade na qual o veÃ­culo foi flagrado em KM/h. Nas infraÃ§Ãµes de excesso de peso: este campo contem o peso total registrado pela balanÃ§a em Kg. Nas infraÃ§Ãµes de alcoolemia este campo contem o valor indicado pelo etilÃ´metro e, nesse caso, o campo Unidade de Medida utilizada por esse aparelho (DG/l, g% ou Mg/l)."
+        },
+        "limitePermitido" : {
+          "type" : "number",
+          "description" : "Limite permitido. Nas infraÃ§Ãµes de excesso de velocidade: este campo contem a velocidade permitida para ao local em Km/h. Nas infraÃ§Ãµes de excesso de peso: este campo contem o peso permitido para o veÃ­culo em questÃ£o em KG. Nas infraÃ§Ãµes de alcoolemia este campo contem o valor limite."
+        },
+        "medicaoConsiderada" : {
+          "type" : "number",
+          "description" : "MediÃ§Ã£o limite considerada para imposiÃ§Ã£o da autuaÃ§Ã£o de infraÃ§Ã£o de trÃ¢nsito."
+        },
+        "unidadeMedida" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoUnidadeMedida" : {
+          "type" : "string"
+        },
+        "valorIntegralInfracao" : {
+          "type" : "number",
+          "description" : "Valor integral a ser pago por uma infraÃ§Ã£o."
+        },
+        "origemPossuidorVeiculo" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Indica a origem dos dados do possuidor do veÃ­culo."
+        },
+        "descricaoOrigemPossuidorVeiculo" : {
+          "type" : "string"
+        },
+        "tipoDocumentoPossuidor" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoTipoDocumentoPossuidor" : {
+          "type" : "string"
+        },
+        "numeroIdentificacaoPossuidor" : {
+          "type" : "string",
+          "description" : "NÃºmero da inscriÃ§Ã£o no CPF ou no CNPJ do proprietÃ¡rio/arrendatÃ¡rio do veÃ­culo."
+        },
+        "nomePossuidor" : {
+          "type" : "string"
+        },
+        "dataEmissaoNotificacaoAutuacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataLimiteDefesaAutuacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataAceiteUfJurisdicaoAutuacao" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data em que a UF de jurisdiÃ§Ã£o do veÃ­culo autuado recebeu a transaÃ§Ã£o gerada na BINIT"
+        },
+        "indicadorNotificacaoEditalAutuacao" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "dataNotificacaoEditalAutuacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "numeroNotificacaoPenalidade" : {
+          "type" : "string",
+          "description" : "NÃºmero da notificaÃ§Ã£o de infraÃ§Ã£o de trÃ¢nsito."
+        },
+        "dataEmissaoNotificacaoPenalidade" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataVencimentoNotificacaoPenalidade" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "indicadorNotificacaoEditalPenalidade" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "dataNotificacaoEditalPenalidade" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataAceiteUfJurisdicaoPenalidade" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "tipoPenalidade" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoPenalidade" : {
+          "type" : "string"
+        },
+        "nomeRealInfrator" : {
+          "type" : "string"
+        },
+        "modeloCnhRealInfrator" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoModeloCnhRealInfrator" : {
+          "type" : "string"
+        },
+        "numeroRegistroCnhRealInfrator" : {
+          "type" : "string"
+        },
+        "ufExpedicaoCnhRealCondutor" : {
+          "type" : "string"
+        },
+        "dataApresentacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "indicadorStatusAnalisePontuacao" : {
+          "type" : "string",
+          "description" : "Exibe para cada registro, o resultado ocorrido apÃ³s o Processamento Batch de PontuaÃ§Ã£o AutomÃ¡tica."
+        },
+        "descricaoStatusAnalisePontuacao" : {
+          "type" : "string"
+        },
+        "codigoModeloCnhPontuada" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoModeloCnhPontuada" : {
+          "type" : "string"
+        },
+        "numeroRegistroCnhPontuada" : {
+          "type" : "string"
+        },
+        "ufExpedicaoCnhPontuada" : {
+          "type" : "string"
+        },
+        "dataInclusaoExclusaoLote" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "ufOrigemDesvinculacao" : {
+          "type" : "string"
+        },
+        "indicadorMotivoDesvinculacao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoMotivoDesvinculacao" : {
+          "type" : "string"
+        },
+        "dataSolicitacaoDesvinculacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataAceiteUfRelacionada" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data em que a UF relacionada a infraÃ§Ã£o de trÃ¢nsito recebeu a transaÃ§Ã£o de registro de pagamento gerada na BINIT"
+        },
+        "indicadorExigibilidade" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Indica se a infraÃ§Ã£o deve ou nÃ£o ser cobrada pela UF de jurisdiÃ§Ã£o."
+        },
+        "descricaoIndicadorExigibilidade" : {
+          "type" : "string"
+        },
+        "ufPagamento" : {
+          "type" : "string"
+        },
+        "dataPagamentoInfracao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "valorPagoInfracao" : {
+          "type" : "number"
+        },
+        "dataRegistroPagamento" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "quantidadePagamentos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tipoOcorrencia" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoTipoOcorrencia" : {
+          "type" : "string"
+        },
+        "origemOcorrencia" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Indica o Ã³rgÃ£o que originou a ocorrÃªncia."
+        },
+        "descricaoOrigemOcorrencia" : {
+          "type" : "string"
+        },
+        "numeroProcesso" : {
+          "type" : "string",
+          "description" : "NÃºmero do processo que gerou a ocorrÃªncia."
+        },
+        "dataOcorrencia" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataRegistroOcorrencia" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "InfracaoPaginada" : {
+      "type" : "object",
+      "required" : [ "infracoes" ],
+      "properties" : {
+        "quantidadeInfracoes" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de infraÃ§Ãµes retornados na consulta"
+        },
+        "quantidadeInfracoesReal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Total de infraÃ§Ãµes na base do Denatran que atendem os critÃ©rios da consulta realizada"
+        },
+        "idUltimoRegistro" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Id da Ãºltima infraÃ§Ã£o da lista retornada na consulta. Quando presente, utilizar esse valor para efetuar a consulta das prÃ³ximas infraÃ§Ãµes"
+        },
+        "infracoes" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "infracao",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/Infracao"
+          }
+        }
+      }
+    },
+    "MultaInterestadual" : {
+      "type" : "object",
+      "properties" : {
+        "placa" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)"
+        },
+        "renavam" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores"
+        },
+        "numeroIdentificacaoProprietario" : {
+          "type" : "string"
+        },
+        "codigoOrgaoAutuador" : {
+          "type" : "string"
+        },
+        "descricaoOrgaoAutuador" : {
+          "type" : "string"
+        },
+        "numeroAutoInfracao" : {
+          "type" : "string",
+          "description" : "nÃºmero do auto de InfraÃ§Ã£o."
+        },
+        "codigoInfracao" : {
+          "type" : "string"
+        },
+        "codigoDesdobramentoInfracao" : {
+          "type" : "string"
+        },
+        "descricaoInfracao" : {
+          "type" : "string"
+        },
+        "dataInfracao" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data em que ocorreu a infraÃ§Ã£o de trÃ¢nsito."
+        },
+        "horaInfracao" : {
+          "type" : "string"
+        },
+        "localOcorrenciaInfracao" : {
+          "type" : "string"
+        },
+        "codigoRenainf" : {
+          "type" : "string",
+          "description" : "CÃ³digo de registro da infraÃ§Ã£o de trÃ¢nsito no RENAINF, gerado automaticamente na BINIT na efetivaÃ§Ã£o do registro da infraÃ§Ã£o."
+        },
+        "valorMulta" : {
+          "type" : "number",
+          "description" : "Valor da multa (duas casas decimais) efetivamente pago pelo infrator"
+        },
+        "dataVencimento" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data de vencimento da notificaÃ§Ã£o para pagamento com desconto."
+        }
+      },
+      "xml" : {
+        "name" : "multainterestadual"
+      }
+    },
+    "MultasInterestaduais" : {
+      "type" : "object",
+      "required" : [ "multas" ],
+      "properties" : {
+        "quantidade" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de infraÃ§Ãµes retornados na consulta"
+        },
+        "quantidadeReal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Total de infraÃ§Ãµes na base do Denatran que atendem os critÃ©rios da consulta realizada"
+        },
+        "multas" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "multas",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/MultaInterestadual"
+          }
+        }
+      }
+    },
+    "Ocorrencia" : {
+      "type" : "object",
+      "properties" : {
+        "ufDetranBloqueio" : {
+          "type" : "string"
+        },
+        "dataImpedimentoBloqueio" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "motivoImpedimentoBloqueio" : {
+          "type" : "string"
+        },
+        "descricaoMotivoImpedimentoBloqueio" : {
+          "type" : "string"
+        },
+        "orgaoResponsavelImpedimentoBloqueio" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "documentoGeradorImpedimentoBloqueio" : {
+          "type" : "string"
+        },
+        "dataInicioImpedimentoBloqueio" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataTerminoImpedimentoBloqueio" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "decricaoBloqueio" : {
+          "type" : "string"
+        },
+        "tipoDecisaoBloqueio" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoDecisaoBloqueio" : {
+          "type" : "string"
+        },
+        "recolhimentoCnhBloqueada" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "getrequisitosLiberacaoBloqueio" : {
+          "type" : "string"
+        },
+        "prazoPenalBloqueio" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tipoPrazoPenalBloqueio" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "prazoPenalTotalBloqueio" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "tipoPrazoTotalBloqueio" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoPrazoTotalBloqueio" : {
+          "type" : "string"
+        },
+        "descricaoPrazoBloqueio" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "ocorrencia"
+      }
+    },
+    "OcorrenciaInfracao" : {
+      "type" : "object",
+      "properties" : {
+        "ufOcorrencia" : {
+          "type" : "string"
+        },
+        "tipoOcorrencia" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoTipoOcorrencia" : {
+          "type" : "string"
+        },
+        "origemOcorrencia" : {
+          "type" : "string"
+        },
+        "descricaoOrigemOcorrencia" : {
+          "type" : "string"
+        },
+        "dataOcorrencia" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "numeroProcesso" : {
+          "type" : "string"
+        },
+        "dataRegistroOcorrencia" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataAceiteUfRelacionada" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "indicadorRegistroCancelamento" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoIndicadorRegistroCancelamento" : {
+          "type" : "string"
+        },
+        "dataCancelamentoRegistro" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataAceiteUfRelacionada2" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "indicadorRegistroReativacao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoIndicadorRegistroReativacao" : {
+          "type" : "string"
+        },
+        "dataRegistroReativacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataAceiteUfJurisdicao" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "xml" : {
+        "name" : "ocorrenciaInfracao"
+      }
+    },
+    "OcorrenciaInfracaoCondutor" : {
+      "type" : "object",
+      "properties" : {
+        "codigoInfracao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoAutoInfracao" : {
+          "type" : "string"
+        },
+        "quantidadeInfracao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "gravidadeInfracao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoGravidadeInfracao" : {
+          "type" : "string"
+        },
+        "quantidadeAdvertenciasPorEscrito" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "xml" : {
+        "name" : "ocorrenciaInfracaoCondutor"
+      }
+    },
+    "OcorrenciaRouboFurto" : {
+      "type" : "object",
+      "properties" : {
+        "chassi" : {
+          "type" : "string",
+          "description" : "Chassi do veÃ­culo"
+        },
+        "placa" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)"
+        },
+        "ufJurisdicao" : {
+          "type" : "string"
+        },
+        "municipioEmplacamento" : {
+          "type" : "string"
+        },
+        "marcaModelo" : {
+          "type" : "string"
+        },
+        "cor" : {
+          "type" : "string",
+          "description" : "CÃ³digo para identificar a cor predominante de um veÃ­culo"
+        },
+        "anoModelo" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "anoFabricacao" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "codigoCategoriaOcorrencia" : {
+          "type" : "string",
+          "description" : "Indica o tipo de ocorrÃªncia que serÃ¡ processada"
+        },
+        "descricaoCategoriaOcorrencia" : {
+          "type" : "string"
+        },
+        "ufboletimOcorrencia" : {
+          "type" : "string",
+          "description" : "Sigla da Unidade da FederaÃ§Ã£o do Ã“rgÃ£o de SeguranÃ§a onde foi registrada a ocorrÃªncia de Roubo/Furto."
+        },
+        "codigoorgaoSeguranca" : {
+          "type" : "string",
+          "description" : "CÃ³digo do Ã³rgÃ£o de seguranÃ§a, no qual se deu o registro da ocorrÃªncia policial de roubo/furto de um veÃ­culo"
+        },
+        "descricaoorgaoSeguranca" : {
+          "type" : "string"
+        },
+        "numeroboletimOcorrencia" : {
+          "type" : "string",
+          "description" : "NÃºmero atribuÃ­do a um boletim de ocorrÃªncia policial"
+        },
+        "anoboletimOcorrencia" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Ano que consta na identificaÃ§Ã£o do BOLETIM DE OCORRÃŠNCIA DE ROUBO/FURTO"
+        },
+        "codigomunicipioOcorrencia" : {
+          "type" : "string",
+          "description" : "Nome do municÃ­pio onde ocorreu o fato gerador do alarme."
+        },
+        "descricaomunicipioOcorrencia" : {
+          "type" : "string"
+        },
+        "tipoDeclaracao" : {
+          "type" : "string"
+        },
+        "descricaoTipoDeclaracao" : {
+          "type" : "string"
+        },
+        "dataOcorrencia" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "tipoDocumentoInformante" : {
+          "type" : "string"
+        },
+        "descricaoTipoDocumentoInformante" : {
+          "type" : "string"
+        },
+        "numeroIdentificacaoInformante" : {
+          "type" : "string",
+          "description" : "NÃºmero do documento fornecido pelo informante do alarme ou da ocorrÃªncia de roubo/furto"
+        },
+        "dddTelefoneContato" : {
+          "type" : "string"
+        },
+        "numeroTelefoneContato" : {
+          "type" : "string",
+          "description" : "NÃºmero do telefone do contato referente a ocorrÃªncia de alarme ou roubo/furto."
+        },
+        "ramalTelefoneContato" : {
+          "type" : "string"
+        },
+        "nomeInformante" : {
+          "type" : "string"
+        },
+        "numeroCentralAlarme" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "NÃºmero de identificaÃ§Ã£o da central de recepÃ§Ã£o de alarme nos Ã³rgÃ£os de seguranÃ§a"
+        },
+        "dataRegistroAlarme" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data do registro da sinalizaÃ§Ã£o de alarme de roubo/furto de um veÃ­culo"
+        },
+        "horaRegistroAlarme" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "ocorrenciaRouboFurto"
+      }
+    },
+    "OcorrenciasInfracoes" : {
+      "type" : "object",
+      "required" : [ "ocorrencias" ],
+      "properties" : {
+        "quantidade" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de infraÃ§Ãµes retornados na consulta"
+        },
+        "quantidadeReal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Total de infraÃ§Ãµes na base do Denatran que atendem os critÃ©rios da consulta realizada"
+        },
+        "ocorrencias" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "ocorrencia",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/OcorrenciaInfracao"
+          }
+        }
+      }
+    },
+    "OcorrenciasRouboFurto" : {
+      "type" : "object",
+      "properties" : {
+        "quantidadeRetornada" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "quantidadeReal" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "idUltimoRegistro" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "ocorrenciasRouboFurto" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "ocorrenciaRouboFurto",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/OcorrenciaRouboFurto"
+          }
+        }
+      }
+    },
+    "PagamentoInfracao" : {
+      "type" : "object",
+      "properties" : {
+        "ufPagamento" : {
+          "type" : "string"
+        },
+        "numeroDocumentoArrecadacao" : {
+          "type" : "string"
+        },
+        "dataPagamentoInfracao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "valorPago" : {
+          "type" : "number"
+        },
+        "codigoBanco" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "codigoAgencia" : {
+          "type" : "string"
+        },
+        "numeroTerminal" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "numeroAutenticacao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "dataCredito" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "valorRepasse" : {
+          "type" : "number"
+        },
+        "dataRegistroPagamento" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataLancamentoPagamento" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "indicadorRegistroCancelamento" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "descricaoIndicadorRegistroCancelamento" : {
+          "type" : "string"
+        },
+        "dataCancelamentoPagamento" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "dataCancelamentoAceitePagamento" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "xml" : {
+        "name" : "pagamentoinfracao"
+      }
+    },
+    "PagamentosInfracoes" : {
+      "type" : "object",
+      "required" : [ "pagamentos" ],
+      "properties" : {
+        "quantidade" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de infraÃ§Ãµes retornados na consulta"
+        },
+        "quantidadeReal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Total de infraÃ§Ãµes na base do Denatran que atendem os critÃ©rios da consulta realizada"
+        },
+        "pagamentos" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "pagamento",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/PagamentoInfracao"
+          }
+        }
+      }
+    },
+    "Processo" : {
+      "type" : "object",
+      "required" : [ "restricoesJudiciais" ],
+      "properties" : {
+        "codigoTribunal" : {
+          "type" : "string"
+        },
+        "nomeTribunal" : {
+          "type" : "string"
+        },
+        "codigoOrgaoJudicial" : {
+          "type" : "string"
+        },
+        "nomeOrgaoJudicial" : {
+          "type" : "string"
+        },
+        "numeroProcesso" : {
+          "type" : "string"
+        },
+        "quantidadeRestricoesAtivas" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "restricoesJudiciais" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "restricaoJudicial",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/RestricaoJudicial"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "processo"
+      }
+    },
+    "ProcessoCompleto" : {
+      "type" : "object",
+      "required" : [ "restricoesJudiciais" ],
+      "properties" : {
+        "codigoTribunal" : {
+          "type" : "string"
+        },
+        "nomeTribunal" : {
+          "type" : "string"
+        },
+        "codigoOrgaoJudicial" : {
+          "type" : "string"
+        },
+        "nomeOrgaoJudicial" : {
+          "type" : "string"
+        },
+        "numeroProcesso" : {
+          "type" : "string"
+        },
+        "enderecoLogradouro" : {
+          "type" : "string"
+        },
+        "enderecoNumero" : {
+          "type" : "string"
+        },
+        "enderecoComplemento" : {
+          "type" : "string"
+        },
+        "enderecoBairrro" : {
+          "type" : "string"
+        },
+        "enderecoMunicipio" : {
+          "type" : "string"
+        },
+        "descricaoEnderecoMunicipio" : {
+          "type" : "string"
+        },
+        "enderecoUf" : {
+          "type" : "string"
+        },
+        "enderecoCep" : {
+          "type" : "string"
+        },
+        "dddTelefone1" : {
+          "type" : "string"
+        },
+        "telefone1" : {
+          "type" : "string"
+        },
+        "dddTelefone2" : {
+          "type" : "string"
+        },
+        "telefone2" : {
+          "type" : "string"
+        },
+        "quantidadeRestricoesAtiva" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "restricoesJudiciais" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "restricaoJudicial",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/RestricaoJudicial"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "processoCompleto"
+      }
+    },
+    "Processos" : {
+      "type" : "object",
+      "properties" : {
+        "quantidadeRetornada" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "quantidadeReal" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "idUltimoRegistro" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "processos" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "processo",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/Processo"
+          }
+        }
+      }
+    },
+    "ProcessosCompletos" : {
+      "type" : "object",
+      "properties" : {
+        "quantidadeRetornada" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "quantidadeReal" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "idUltimoRegistro" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "processos" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "processoCompleto",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/ProcessoCompleto"
+          }
+        }
+      }
+    },
+    "Recall" : {
+      "type" : "object",
+      "properties" : {
+        "nome" : {
+          "type" : "string"
+        },
+        "descricao" : {
+          "type" : "string"
+        },
+        "dataRegistro" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "xml" : {
+        "name" : "recall"
+      }
+    },
+    "Recalls" : {
+      "type" : "object",
+      "required" : [ "recalls" ],
+      "properties" : {
+        "quantidade" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de infraÃ§Ãµes retornados na consulta"
+        },
+        "quantidadeReal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Total de infraÃ§Ãµes na base do Denatran que atendem os critÃ©rios da consulta realizada"
+        },
+        "recalls" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "recalls",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/Recall"
+          }
+        }
+      }
+    },
+    "RestricaoJudicial" : {
+      "type" : "object",
+      "properties" : {
+        "codigoTipoRestricao" : {
+          "type" : "string"
+        },
+        "descricaoRestricao" : {
+          "type" : "string"
+        },
+        "dataInclusaoRestricao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "horaInclusaoRestricao" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "restricaoJudicial"
+      }
+    },
+    "Veiculo" : {
+      "type" : "object",
+      "properties" : {
+        "chassi" : {
+          "type" : "string",
+          "description" : "Chassi do veÃ­culo"
+        },
+        "placa" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica externamente um veÃ­culo (a nÃ­vel nacional)"
+        },
+        "codigoRenavam" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica a inscriÃ§Ã£o no Registro Nacional de VeÃ­culos Automotores"
+        },
+        "situacao" : {
+          "type" : "string"
+        },
+        "codigoMunicipioEmplacamento" : {
+          "type" : "string"
+        },
+        "descricaoMunicipioEmplacamento" : {
+          "type" : "string"
+        },
+        "ufJurisdicao" : {
+          "type" : "string",
+          "description" : "Sigla da Unidade da FederaÃ§Ã£o onde o veÃ­culo foi emplacado"
+        },
+        "codigoRemarcacaoChassi" : {
+          "type" : "string"
+        },
+        "descricaoRemarcacaoChassi" : {
+          "type" : "string"
+        },
+        "codigoTipoVeiculo" : {
+          "type" : "string"
+        },
+        "descricaoTipoVeiculo" : {
+          "type" : "string"
+        },
+        "codigoMarcaModelo" : {
+          "type" : "string"
+        },
+        "descricaoMarcaModelo" : {
+          "type" : "string"
+        },
+        "codigoEspecieVeiculo" : {
+          "type" : "string"
+        },
+        "descricaoEspecieVeiculo" : {
+          "type" : "string"
+        },
+        "codigoTipoCarroceria" : {
+          "type" : "string"
+        },
+        "descricaoTipoCarroceria" : {
+          "type" : "string"
+        },
+        "codigoCor" : {
+          "type" : "string",
+          "description" : "CÃ³digo para identificar a cor predominante de um veÃ­culo"
+        },
+        "descricaoCor" : {
+          "type" : "string"
+        },
+        "codigoCategoria" : {
+          "type" : "string"
+        },
+        "descricaoCategoria" : {
+          "type" : "string"
+        },
+        "anoModelo" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "anoFabricacao" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "potencia" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "PotÃªncia de um veÃ­culo expressa em CV (cavalos a vapor)"
+        },
+        "cilindradas" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Capacidade voluntÃ¡ria do motor expressa em centÃ­metros cÃºbicos"
+        },
+        "codigoCombustivel" : {
+          "type" : "string"
+        },
+        "descricaoCombustivel" : {
+          "type" : "string"
+        },
+        "numeroMotor" : {
+          "type" : "string",
+          "description" : "NÃºmero do motor informado pelo fabricante"
+        },
+        "cmt" : {
+          "type" : "number",
+          "description" : "Capacidade mÃ¡xima de traÃ§Ã£o (em toneladas) de um veÃ­culo"
+        },
+        "pbt" : {
+          "type" : "number",
+          "description" : "Peso bruto total (em toneladas) de um veÃ­culo"
+        },
+        "cmc" : {
+          "type" : "number",
+          "description" : "Capacidade mÃ¡xima de carga (em toneladas) que um veÃ­culo pode transportar"
+        },
+        "procedencia" : {
+          "type" : "string",
+          "description" : "Indica a procedÃªncia de fabricaÃ§Ã£o de um veÃ­culo (nacional ou estrangeiro)"
+        },
+        "numeroCambio" : {
+          "type" : "string",
+          "description" : "NÃºmero da caixa de cÃ¢mbio informado pelo fabricante"
+        },
+        "codigoTipoProprietario" : {
+          "type" : "string"
+        },
+        "descricaoTipoProprietario" : {
+          "type" : "string"
+        },
+        "numeroIdentificacaoProprietario" : {
+          "type" : "string"
+        },
+        "nomeProprietario" : {
+          "type" : "string"
+        },
+        "codigoTipoArrendatario" : {
+          "type" : "string"
+        },
+        "descricaoTipoArrendatario" : {
+          "type" : "string"
+        },
+        "numeroIdentificacaoArrendatario" : {
+          "type" : "string"
+        },
+        "nomeArrendatario" : {
+          "type" : "string"
+        },
+        "numeroCarroceria" : {
+          "type" : "string"
+        },
+        "codigoRestricao1" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao1" : {
+          "type" : "string"
+        },
+        "codigoRestricao2" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao2" : {
+          "type" : "string"
+        },
+        "codigoRestricao3" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao3" : {
+          "type" : "string"
+        },
+        "codigoRestricao4" : {
+          "type" : "string",
+          "description" : "CÃ³digo que identifica o tipo de restriÃ§Ã£o a quem um veÃ­culo estÃ¡ sujeito (1 a 4)"
+        },
+        "descricaoRestricao4" : {
+          "type" : "string"
+        },
+        "qtdEixos" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "numeroEixoTraseiro" : {
+          "type" : "string"
+        },
+        "numeroEixoAuxiliar" : {
+          "type" : "string"
+        },
+        "lotacao" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade mÃ¡xima de pessoas que um veÃ­culo pode transportar"
+        },
+        "dataEmissaoCrv" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data da emissÃ£o impressa no documento. Deve ser a mesma data da autorizaÃ§Ã£o de emissÃ£o do documento"
+        },
+        "naturezaImportacao" : {
+          "type" : "string"
+        },
+        "descricaoDocImportador" : {
+          "type" : "string"
+        },
+        "numeroIdImportador" : {
+          "type" : "string"
+        },
+        "codigoOrgaoRfb" : {
+          "type" : "string",
+          "description" : "CÃ³digo do Ã³rgÃ£o da Receita Federal do Brasil (RFB) que liberou a importaÃ§Ã£o do veÃ­culo estrangeiro, ou que registrou a restriÃ§Ã£o RFB"
+        },
+        "descricaoOrgaoRfb" : {
+          "type" : "string"
+        },
+        "registroAduaneiro" : {
+          "type" : "string"
+        },
+        "numeroDeclaracaoImportacao" : {
+          "type" : "string"
+        },
+        "dataDistImportacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "naturezaFaturamento" : {
+          "type" : "string"
+        },
+        "tipoDocFaturado" : {
+          "type" : "string"
+        },
+        "numeroIdFaturamento" : {
+          "type" : "string",
+          "description" : "NÃºmero de inscriÃ§Ã£o no CPF ou no CNPJ para quem o veÃ­culo foi faturado"
+        },
+        "ufFaturado" : {
+          "type" : "string"
+        },
+        "dataLimite" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Data na qual se encerra a restriÃ§Ã£o de benefÃ­cio tributÃ¡rio do veÃ­culo."
+        },
+        "dataUltimaAtualizacaoImportacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "codigoTipoImportacao" : {
+          "type" : "string"
+        },
+        "descricaoTipoImportacao" : {
+          "type" : "string"
+        },
+        "numeroProcessoImportacao" : {
+          "type" : "string"
+        },
+        "dataBaixaImportacao" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "codigoPaisTransferencia" : {
+          "type" : "string"
+        },
+        "descricaoPaisTransferencia" : {
+          "type" : "string"
+        },
+        "indicadorMultaRenainf" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorComunicacaoVenda" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorPendenciaEmissao" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRestricaoRenajud" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRecall1" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRecall2" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRecall3" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRecall4" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "tipoDocProprietarioIndicado" : {
+          "type" : "string"
+        },
+        "descricaoDocProprietarioIndicado" : {
+          "type" : "string"
+        },
+        "numeroDocProprietarioIndicado" : {
+          "type" : "string"
+        },
+        "dataAtualizacaoMre" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "indicadorSiniav" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "codigoOrigemPropriedade" : {
+          "type" : "string"
+        },
+        "indicadorRestricaoRfb" : {
+          "type" : "string"
+        },
+        "descricaoRestricaoRfb" : {
+          "type" : "string"
+        },
+        "indicadorLeilao" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorRouboFurto" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "indicadorAlarme" : {
+          "type" : "boolean",
+          "default" : false
+        }
+      }
+    },
+    "VeiculoPaginado" : {
+      "type" : "object",
+      "required" : [ "veiculo" ],
+      "properties" : {
+        "quantidadeVeiculo" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de veÃ­culos retornados na consulta"
+        },
+        "quantidadeVeiculoReal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Total de veÃ­culos na base do Denatran que atendem os critÃ©rios da consulta realizada"
+        },
+        "idUltimoRegistro" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Id do Ãºltimo veÃ­culo da lista retornada na consulta. Quando presente, utilizar esse valor para efetuar a consulta dos prÃ³ximos veÃ­culos"
+        },
+        "veiculo" : {
+          "type" : "array",
+          "xml" : {
+            "name" : "veiculos",
+            "wrapped" : true
+          },
+          "items" : {
+            "$ref" : "#/definitions/Veiculo"
+          }
+        }
+      }
+    }
+  }
+}
